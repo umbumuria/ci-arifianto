@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Grafik Persentase Harian & Akumulasi</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
+  <style>
+    body {
+      font-family: sans-serif;
+      padding: 20px;
+      background: #f4f4f4;
+    }
+    h2 {
+      text-align: center;
+    }
+    textarea {
+      width: 100%;
+      font-family: monospace;
+      font-size: 16px;
+      padding: 10px;
+      margin-bottom: 15px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+    }
+    .input-grid {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    .input-group {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .input-group input {
+      width: 60px;
+      text-align: center;
+      padding: 4px;
+    }
+    button {
+      margin: 10px auto;
+      display: block;
+      padding: 8px 16px;
+      font-size: 16px;
+      background-color: #00b894;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #019875;
+    }
+    .charts-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      justify-content: center;
+    }
+    canvas {
+      background: white;
+      border-radius: 8px;
+      padding: 10px;
+      max-width: 100%;
+    }
+  </style>
+</head>
+<body>
+  <h2>Grafik Persentase Harian & Akumulasi</h2>
+
+  <textarea id="bulkInput" rows="3" placeholder="Paste 31 nilai dari Excel di sini, pisahkan dengan spasi, koma, atau baris baru"></textarea>
+
+  <div class="input-grid" id="inputContainer"></div>
+  <button onclick="updateCharts()">Tampilkan Grafik</button>
+
+  <div class="charts-container">
+    <canvas id="chartHarian" height="100"></canvas>
+    <canvas id="chartAkumulasi" height="100"></canvas>
+  </div>
+
+  <script>
+    const labels = Array.from({ length: 31 }, (_, i) => `Tgl ${i + 1}`);
+    const inputContainer = document.getElementById('inputContainer');
+
+    // Buat input harian
+    for (let i = 1; i <= 31; i++) {
+      const group = document.createElement('div');
+      group.className = 'input-group';
+      group.innerHTML = `
+        <label for="day${i}">${i}</label>
+        <input type="number" id="day${i}" value="0" step="any">
+      `;
+      inputContainer.appendChild(group);
+    }
+
+    const ctx1 = document.getElementById('chartHarian').getContext('2d');
+    const ctx2 = document.getElementById('chartAkumulasi').getContext('2d');
+
+    const chartHarian = new Chart(ctx1, {
+      type: 'line',
+      data: {
+        labels: labels,
+        datasets: [{
+          label: 'Persentase Harian',
+          data: Array(31).fill(0),
+          borderColor: '#0984e3',
+          backgroundColor: 'rgba(9, 132, 227, 0.2)',
+          tension: 0.3,
+          fill: false,
+          pointRadius: 5
+        }]
+      },
+      options: {
+        plugins: {
+          datalabels: {
+            color: '#333',
+            anchor: 'end',
+            align: 'top',
+            formatter: value => value + '%',
+            font: {
+              weight: 'bold'
+            }
+          }
+        },
+        scales: {
+          y: {
+            beginAtZero: false,
+            title: {
+              display: true,
+              text: 'Persentase Harian'
+            },
+            ticks: {
+              callback: value => value + '%'
+            }
+          }
+        }
+      },
+      plugins: [ChartDataLabels]
+    });
+
+    const chartAkumulasi = new Chart(ctx2, {
+      type: 'line',
+      data: {
+        labels: labels,
+        datasets: [{
+          label: 'Akumulasi Persentase',
+          data: Array(31).fill(0),
+          borderColor: '#6c5ce7',
+          backgroundColor: 'rgba(108, 92, 231, 0.2)',
+          tension: 0.3,
+          fill: false,
+          pointRadius: 5
+        }]
+      },
+      options: {
+        plugins: {
+          datalabels: {
+            color: '#333',
+            anchor: 'end',
+            align: 'top',
+            formatter: value => value.toFixed(2) + '%',
+            font: {
+              weight: 'bold'
+            }
+          }
+        },
+        scales: {
+          y: {
+            beginAtZero: false,
+            title: {
+              display: true,
+              text: 'Akumulasi (%)'
+            },
+            ticks: {
+              callback: value => value + '%'
+            }
+          }
+        }
+      },
+      plugins: [ChartDataLabels]
+    });
+
+    function updateCharts() {
+      const raw = document.getElementById('bulkInput').value.trim();
+      if (raw) {
+        let values = raw.split(/[\s,;\t\n]+/).map(x => parseFloat(x) || 0);
+        for (let i = 1; i <= 31 && i <= values.length; i++) {
+          document.getElementById(`day${i}`).value = values[i - 1];
+        }
+      }
+
+      const harian = [];
+      const akumulasi = [];
+      let total = 0;
+
+      for (let i = 1; i <= 31; i++) {
+        const val = parseFloat(document.getElementById(`day${i}`).value) || 0;
+        harian.push(val);
+        total += val;
+        akumulasi.push(total);
+      }
+
+      chartHarian.data.datasets[0].data = harian;
+      chartAkumulasi.data.datasets[0].data = akumulasi;
+
+      chartHarian.update();
+      chartAkumulasi.update();
+    }
+  </script>
+</body>
+</html>

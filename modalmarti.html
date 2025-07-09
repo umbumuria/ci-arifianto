@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DCA + Martingale Analyzer</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f8f8f8;
+      margin: 0;
+      padding: 20px;
+    }
+    h2 {
+      margin-bottom: 10px;
+    }
+    .input-section, .result-section {
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+    }
+    input {
+      padding: 5px;
+      margin-right: 10px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+    table, th, td {
+      border: 1px solid #ccc;
+    }
+    th, td {
+      padding: 10px;
+      text-align: right;
+    }
+    th {
+      background-color: #f0f0f0;
+    }
+    td:first-child, th:first-child {
+      text-align: left;
+    }
+  </style>
+</head>
+<body>
+  <div class="input-section">
+    <h2>⚖️ Input Parameter</h2>
+    <div>
+      Harga Awal: <input type="number" id="hargaAwal" value="110000" />
+      Jumlah DCA: <input type="number" id="jumlahDCA" value="5" />
+      Lot per DCA: <input type="number" step="0.01" id="lotPerDCA" value="0.1" />
+      Range DCA (USD): <input type="text" id="rangeDCA" value="10000,11000,12000,13000,14000" />
+    </div>
+    <div>
+      Harga Martingale: <input type="number" id="hargaMartingale" value="50000" />
+      Lot Martingale: <input type="number" step="0.1" id="lotMartingale" value="1.0" />
+      Harga Saat Ini: <input type="number" id="hargaSaatIni" value="50000" />
+      <button onclick="analisa()">Analisa</button>
+    </div>
+  </div>
+
+  <div class="result-section">
+    <h2>📊 Analisa Posisi</h2>
+    <div id="hasilAnalisa"></div>
+  </div>
+
+  <script>
+    function formatUSD(num) {
+      return "$" + num.toLocaleString("en-US");
+    }
+
+    function analisa() {
+      const hargaAwal = parseFloat(document.getElementById("hargaAwal").value);
+      const jumlahDCA = parseInt(document.getElementById("jumlahDCA").value);
+      const lotPerDCA = parseFloat(document.getElementById("lotPerDCA").value);
+      const rangeInput = document.getElementById("rangeDCA").value;
+      const hargaMartingale = parseFloat(document.getElementById("hargaMartingale").value);
+      const lotMartingale = parseFloat(document.getElementById("lotMartingale").value);
+      const hargaSaatIni = parseFloat(document.getElementById("hargaSaatIni").value);
+
+      const ranges = rangeInput.split(',').map(v => parseFloat(v.trim()));
+
+      let html = '<table>';
+      html += '<tr><th>Entry</th><th>Harga (USD)</th><th>Lot (BTC)</th><th>Floating @Harga Saat Ini</th><th>Akumulasi Floating</th></tr>';
+
+      let totalFloating = 0;
+      let totalLot = 0;
+      let totalCost = 0;
+
+      for (let i = 0; i < jumlahDCA; i++) {
+        const harga = hargaAwal - (ranges[i] || 0);
+        const lot = lotPerDCA;
+        const floating = (hargaSaatIni - harga) * lot;
+        totalFloating += floating;
+        totalLot += lot;
+        totalCost += harga * lot;
+        html += `<tr>
+          <td>DCA ${i + 1}</td>
+          <td>${formatUSD(harga)}</td>
+          <td>${lot.toFixed(2)}</td>
+          <td>${formatUSD(floating)}</td>
+          <td>${formatUSD(totalFloating)}</td>
+        </tr>`;
+      }
+
+      // Tambah martingale
+      const floatingMartingale = (hargaSaatIni - hargaMartingale) * lotMartingale;
+      totalFloating += floatingMartingale;
+      totalLot += lotMartingale;
+      totalCost += hargaMartingale * lotMartingale;
+      html += `<tr>
+        <td>Martingale</td>
+        <td>${formatUSD(hargaMartingale)}</td>
+        <td>${lotMartingale.toFixed(2)}</td>
+        <td>${formatUSD(floatingMartingale)}</td>
+        <td>${formatUSD(totalFloating)}</td>
+      </tr>`;
+
+      const modal = totalCost;
+      const modalBuffer = modal * 1.1;
+      const breakEvenPrice = modal / totalLot;
+
+      html += '</table>';
+      html += `<p><strong>Total Lot:</strong> ${totalLot.toFixed(2)} BTC</p>`;
+      html += `<p><strong>Total Floating Loss:</strong> ${formatUSD(totalFloating)}</p>`;
+      html += `<p><strong>Modal + Buffer 10%:</strong> ${formatUSD(modalBuffer)}</p>`;
+      html += `<p>⚖️ <strong>Break-Even Price:</strong> ${formatUSD(breakEvenPrice)}</p>`;
+
+      document.getElementById("hasilAnalisa").innerHTML = html;
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DMAIC Presentation</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: #f4f4f4;
+      overflow-x: hidden;
+    }
+    .slide {
+      display: none;
+      padding: 60px;
+      height: 100vh;
+      box-sizing: border-box;
+      background: white;
+      overflow-y: auto;
+    }
+    .slide.active {
+      display: block;
+      animation: fadeIn 0.8s ease;
+    }
+    @keyframes fadeIn {
+      from {opacity: 0; transform: translateX(50px);}
+      to {opacity: 1; transform: translateX(0);}
+    }
+    .nav-buttons {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+    }
+    button {
+      padding: 10px 20px;
+      margin: 5px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    h1 { color: #2c3e50; }
+    h2 { color: #2980b9; }
+    ul { font-size: 18px; line-height: 1.6; }
+    p { font-size: 18px; }
+    .example {
+      background: #e8f0fe;
+      padding: 10px;
+      border-left: 5px solid #2980b9;
+      margin-top: 10px;
+      font-size: 17px;
+    }
+    .sample-case {
+      margin-top: 20px;
+      background: #fff9e6;
+      padding: 15px;
+      border-left: 5px solid #f39c12;
+    }
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      margin-top: 20px;
+    }
+    th, td {
+      border: 1px solid #bdc3c7;
+      padding: 8px 12px;
+      text-align: left;
+    }
+    th {
+      background-color: #ecf0f1;
+    }
+    pre {
+      background-color: #ecf0f1;
+      padding: 10px;
+      overflow-x: auto;
+    }
+  </style>
+</head>
+<body>
+
+<div class="slide active">
+  <h1>DMAIC: Pendekatan Perbaikan Proses</h1>
+  <p><strong>DMAIC</strong> adalah metode sistematis untuk menyelesaikan masalah dan meningkatkan proses secara berkelanjutan. Singkatan dari: Define, Measure, Analyze, Improve, Control.</p>
+</div>
+
+<div class="slide">
+  <h2>DEFINE - Menentukan Masalah</h2>
+  <p>Langkah pertama adalah mendefinisikan permasalahan dan ruang lingkup proyek.</p>
+  <ul>
+    <li>Identifikasi masalah utama dan pelanggan terdampak</li>
+    <li>Tentukan tujuan SMART</li>
+    <li>Gunakan SIPOC untuk melihat keseluruhan proses</li>
+  </ul>
+  <div class="example">
+    Tools: SIPOC Diagram, Project Charter, VOC Survey
+  </div>
+  <div class="sample-case">
+    <strong>Contoh:</strong> Sebuah rumah sakit menerima keluhan karena waktu tunggu lebih dari 2 jam. SIPOC digunakan untuk mengidentifikasi bahwa hambatan utama terjadi pada bagian "Pendaftaran".
+  </div>
+  <h3>Contoh SIPOC:</h3>
+  <table>
+    <tr>
+      <th>Supplier</th>
+      <th>Input</th>
+      <th>Process</th>
+      <th>Output</th>
+      <th>Customer</th>
+    </tr>
+    <tr>
+      <td>Pasien</td>
+      <td>Form Registrasi</td>
+      <td>Pendaftaran ke Sistem</td>
+      <td>Data Pasien Tercatat</td>
+      <td>Petugas & Dokter</td>
+    </tr>
+  </table>
+</div>
+
+<div class="slide">
+  <h2>MEASURE - Ukur Kondisi Saat Ini</h2>
+  <p>Mengumpulkan data akurat sebagai dasar analisis dan pengambilan keputusan.</p>
+  <ul>
+    <li>Tentukan metrik seperti cycle time atau error rate</li>
+    <li>Validasi alat ukur (misal stopwatch, software)</li>
+    <li>Buat rencana pengumpulan data</li>
+  </ul>
+  <div class="example">
+    Tools: Check Sheet, Histogram, Run Chart
+  </div>
+  <div class="sample-case">
+    <strong>Contoh:</strong> Sebuah restoran cepat saji mencatat waktu tunggu pelanggan selama 7 hari. Hasil histogram menunjukkan lonjakan di jam makan siang.
+  </div>
+  <h3>Check Sheet:</h3>
+  <table>
+    <tr>
+      <th>Tanggal</th>
+      <th>Jumlah Keluhan</th>
+      <th>Validasi</th>
+    </tr>
+    <tr>
+      <td>1 Juni</td>
+      <td>5</td>
+      <td>✔️</td>
+    </tr>
+    <tr>
+      <td>2 Juni</td>
+      <td>3</td>
+      <td>✔️</td>
+    </tr>
+  </table>
+</div>
+
+<div class="slide">
+  <h2>ANALYZE - Analisis Akar Masalah</h2>
+  <p>Menentukan penyebab utama dari masalah yang diukur.</p>
+  <ul>
+    <li>Gunakan Fishbone Diagram untuk kategorisasi penyebab</li>
+    <li>Lakukan 5 Whys untuk pendalaman</li>
+    <li>Gunakan Pareto Chart untuk mengurutkan prioritas</li>
+  </ul>
+  <div class="example">
+    Tools: Fishbone, Pareto, Scatter Plot
+  </div>
+  <div class="sample-case">
+    <strong>Contoh:</strong> Perusahaan pengiriman menemukan bahwa 70% keterlambatan terjadi akibat proses loading yang tidak efisien.
+  </div>
+  <h3>Fishbone Diagram (teks):</h3>
+  <pre>
+                                 Masalah: Keterlambatan
+                           ┌────────────┐       ┌────────────┐
+                           │  Manusia   │       │  Metode    │
+                           │  Kurang    │       │  Tidak     │
+                           │  Terlatih  │       │  Efisien   │
+                           └────────────┘       └────────────┘
+                           ┌────────────┐       ┌────────────┐
+                           │  Mesin     │       │  Material   │
+                           │  Lambat    │       │  Tidak Siap │
+                           └────────────┘       └────────────┘
+  </pre>
+</div>
+
+<div class="slide">
+  <h2>IMPROVE - Perbaikan Solusi</h2>
+  <p>Mengembangkan, menguji, dan menerapkan solusi untuk mengatasi akar masalah.</p>
+  <ul>
+    <li>Brainstorming ide perbaikan</li>
+    <li>Gunakan FMEA untuk mitigasi risiko solusi</li>
+    <li>Uji coba perbaikan dalam skala kecil</li>
+  </ul>
+  <div class="example">
+    Tools: Pugh Matrix, FMEA, Pilot Plan
+  </div>
+  <div class="sample-case">
+    <strong>Contoh:</strong> Sebuah bank menerapkan layanan antrean online. Pilot menunjukkan penurunan waktu tunggu hingga 40%.
+  </div>
+  <h3>Contoh FMEA:</h3>
+  <table>
+    <tr>
+      <th>Proses</th>
+      <th>Potensi Kegagalan</th>
+      <th>Efek</th>
+      <th>Sev</th>
+      <th>Occ</th>
+      <th>Det</th>
+      <th>RPN</th>
+    </tr>
+    <tr>
+      <td>Input Data</td>
+      <td>Salah input</td>
+      <td>Data tidak akurat</td>
+      <td>7</td>
+      <td>5</td>
+      <td>3</td>
+      <td>105</td>
+    </tr>
+  </table>
+</div>
+
+<div class="slide">
+  <h2>CONTROL - Menjaga Perbaikan</h2>
+  <p>Menetapkan kontrol agar perbaikan yang dilakukan tetap berjalan.</p>
+  <ul>
+    <li>Standarisasi melalui SOP dan pelatihan</li>
+    <li>Gunakan visual control dan dashboard</li>
+    <li>Pantau dengan Control Chart atau checklist audit</li>
+  </ul>
+  <div class="example">
+    Tools: SOP, Checklist, Control Chart
+  </div>
+  <div class="sample-case">
+    <strong>Contoh:</strong> Gudang e-commerce menggunakan kontrol visual warna dan alarm sistem jika waktu pengemasan melebihi 2 menit.
+  </div>
+  <h3>Contoh Control Chart:</h3>
+  <img src="https://upload.wikimedia.org/wikipedia/commons/1/19/Xbar_chart.png" alt="Control Chart" style="max-width: 100%; border: 1px solid #ccc;" />
+</div>
+
+<div class="slide">
+  <h2>Ringkasan Studi Kasus</h2>
+  <p>DMAIC dapat digunakan di berbagai sektor: manufaktur, pelayanan, logistik, hingga pendidikan.</p>
+  <div class="sample-case">
+    <strong>Studi Kasus:</strong> Sebuah perusahaan logistik mengurangi error pengiriman dari 12% menjadi 3% dengan:
+    <ul>
+      <li>DEFINE: Analisa keluhan pengiriman dan VOC</li>
+      <li>MEASURE: Mencatat data 3 bulan terakhir</li>
+      <li>ANALYZE: Fishbone menunjukkan masalah SOP pengemasan</li>
+      <li>IMPROVE: Terapkan standar baru dan checklist pengemasan</li>
+      <li>CONTROL: Gunakan dashboard harian dan pelatihan bulanan</li>
+    </ul>
+  </div>
+</div>
+
+<div class="nav-buttons">
+  <button onclick="prevSlide()">Sebelumnya</button>
+  <button onclick="nextSlide()">Selanjutnya</button>
+</div>
+
+<script>
+  let current = 0;
+  const slides = document.querySelectorAll('.slide');
+
+  function showSlide(index) {
+    slides.forEach((slide, i) => {
+      slide.classList.remove('active');
+      if (i === index) slide.classList.add('active');
+    });
+  }
+
+  function nextSlide() {
+    if (current < slides.length - 1) {
+      current++;
+      showSlide(current);
+    }
+  }
+
+  function prevSlide() {
+    if (current > 0) {
+      current--;
+      showSlide(current);
+    }
+  }
+</script>
+
+</body>
+</html>
